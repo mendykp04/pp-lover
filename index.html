@@ -35,7 +35,7 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  h1, h2, .line, .btn, .chip, .stamp { font-family: "Mali", "Thonburi", cursive; }
+  h1, h2, .line, .btn { font-family: "Mali", "Thonburi", cursive; }
 
   /* หัวใจลอยพื้นหลัง */
   #sky { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
@@ -95,7 +95,7 @@
     box-shadow: 0 4px 0 var(--line);
   }
   .btn:disabled { opacity: .45; cursor: not-allowed; }
-  .btn:focus-visible, .chip:focus-visible, .envelope:focus-visible {
+  .btn:focus-visible, .envelope:focus-visible {
     outline: 3px solid var(--ink); outline-offset: 3px;
   }
 
@@ -108,20 +108,30 @@
   @keyframes twitch { 92% { transform: rotate(0); } 95% { transform: rotate(-9deg); } 98% { transform: rotate(4deg); } }
   .cat.wiggle { animation: wiggle 1.6s ease-in-out infinite; }
   @keyframes wiggle { 50% { transform: rotate(4deg) translateY(-3px); } }
-  .card.has-cat, .ticket.has-cat { position: relative; margin-top: 74px; }
-  .cat.peek {
-    position: absolute; left: 50%; top: -82px;
-    transform: translateX(-50%);
+  /* รูปแมวจริง ใส่กรอบแบบโพลารอยด์ */
+  .polaroid {
+    position: relative;
+    background: #fff;
+    padding: 8px 8px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 22px -14px rgba(74, 37, 48, .55);
+    transform: rotate(var(--tilt, 0deg));
   }
-  .pair {
-    position: absolute; left: 0; right: 0; top: -78px;
-    display: flex; justify-content: center; align-items: flex-end; gap: 4px;
+  .polaroid img {
+    display: block; width: 100%;
+    aspect-ratio: 1; object-fit: cover;
+    border-radius: 3px;
+    background: var(--paper-deep);
   }
-  .pair .cat { width: 92px; margin: 0; }
-  .pair .cat:first-child { transform: rotate(-6deg); }
-  .pair .cat:last-child { transform: rotate(6deg); }
-  .pair .heart { color: var(--rose); font-size: 26px; line-height: 1; margin-bottom: 34px; animation: beat 1.1s ease-in-out infinite; }
-  @keyframes beat { 15% { transform: scale(1.25); } 30% { transform: scale(1); } 45% { transform: scale(1.15); } }
+  .polaroid figcaption {
+    font-family: "Mali", "Thonburi", cursive;
+    font-size: .92rem; font-weight: 600;
+    color: var(--rose-deep);
+    margin-top: 7px; line-height: 1.3;
+  }
+  .polaroid.pop { animation: pop .45s cubic-bezier(.3, 1.5, .5, 1) backwards; }
+  @keyframes pop { from { opacity: 0; transform: scale(.7) rotate(0deg); } }
 
   /* ฉาก 1: ซองจดหมาย */
   .envelope {
@@ -165,7 +175,7 @@
   .line {
     font-size: clamp(1.3rem, 5.6vw, 1.6rem);
     line-height: 1.6; font-weight: 600;
-    min-height: 5.2em;
+    min-height: 4.8em;
     display: grid; place-items: center;
   }
   .line span { animation: enter .45s cubic-bezier(.2, .8, .2, 1); }
@@ -176,53 +186,16 @@
   }
   .dots i.on { background: var(--rose); width: 22px; border-radius: 8px; }
 
-  /* ฉาก 3: คำถาม */
-  .answers {
-    display: flex; gap: 14px; justify-content: center; align-items: center;
-    margin-top: 28px; min-height: 64px; flex-wrap: wrap;
-  }
-  #yes { transition: transform .25s cubic-bezier(.3, 1.6, .5, 1), box-shadow .12s; }
-  #no.running { position: fixed; z-index: 5; transition: left .22s ease-out, top .22s ease-out; }
+  .card .polaroid { width: min(78%, 250px); margin: 0 auto 18px; }
 
-  /* ฉาก 4: เลือกเดท */
-  .group { margin-top: 22px; text-align: left; }
-  .group h3 { font-size: .95rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 10px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 9px; }
-  .chip {
-    appearance: none; cursor: pointer;
-    font-size: 1rem; font-weight: 600; color: var(--ink);
-    padding: 9px 15px; border-radius: 999px;
-    background: var(--paper); border: 1.5px solid var(--line);
-    transition: all .15s;
+  /* ฉาก 3: กำแพงแมว */
+  #s3 { width: min(100%, 560px); padding-bottom: 24px; }
+  .wall {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 16px 14px; margin: 24px 0 26px;
   }
-  .chip[aria-pressed="true"] {
-    background: var(--rose); border-color: var(--rose); color: #fff;
-    transform: scale(1.05);
-  }
-
-  /* ฉาก 5: ตั๋วเดท */
-  .ticket {
-    background: var(--card);
-    border: 2px dashed var(--rose);
-    border-radius: 22px;
-    padding: 26px 22px;
-    position: relative;
-  }
-  .ticket dl { margin: 18px 0 6px; text-align: left; }
-  .ticket .row {
-    display: flex; justify-content: space-between; gap: 12px;
-    padding: 11px 0; border-bottom: 1.5px dotted var(--line);
-  }
-  .ticket dt { color: var(--ink-soft); }
-  .ticket dd { font-weight: 600; text-align: right; }
-  .stamp {
-    display: inline-block; margin-top: 16px;
-    padding: 5px 14px; border: 2px solid var(--rose); border-radius: 8px;
-    color: var(--rose); font-weight: 700; letter-spacing: .04em;
-    transform: rotate(-5deg);
-  }
-  .after { margin-top: 22px; display: grid; gap: 10px; justify-items: center; }
-  #copied { font-size: .9rem; color: var(--ink-soft); min-height: 1.3em; }
+  @media (min-width: 520px) { .wall { grid-template-columns: repeat(3, 1fr); } }
+  .float.word { font-family: "Mali", "Thonburi", cursive; font-weight: 600; color: #f3a5b3; white-space: nowrap; }
 
   .burst {
     position: fixed; z-index: 9; pointer-events: none;
@@ -256,8 +229,11 @@
 
   <!-- 2 -->
   <section class="scene" id="s2">
-    <div class="card has-cat">
-      <div class="cat peek" id="lineCat"></div>
+    <div class="card">
+      <figure class="polaroid" id="linePhoto">
+        <img id="lineImg" alt="รูปแมว">
+        <figcaption id="lineCheer"></figcaption>
+      </figure>
       <div class="line" id="line" aria-live="polite"></div>
       <div class="dots" id="dots"></div>
       <button class="btn" id="next">ต่อไป</button>
@@ -266,64 +242,16 @@
 
   <!-- 3 -->
   <section class="scene" id="s3">
-    <div class="card has-cat">
-      <div class="cat peek" id="askCat" data-mood="love" data-fur="cream"></div>
-      <h2>พูดจริง ๆ แล้วนะ<br><span class="name" data-her></span> ไปเดทกับเราไหม?</h2>
-      <p class="sub" id="plea">เลือกได้ตามใจเลย ไม่กดดัน (นิดเดียว)</p>
-      <div class="answers">
-        <button class="btn" id="yes">ไปสิ!</button>
-        <button class="btn ghost" id="no">ไม่ดีกว่า</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4 -->
-  <section class="scene" id="s4">
-    <div class="card has-cat">
-      <div class="cat peek" data-mood="happy" data-fur="gray"></div>
-      <h2>เย้! งั้นเลือกเลย 🎉</h2>
-      <p class="sub">อยากไปทำอะไร วันไหนดี</p>
-      <div class="group">
-        <h3>ไปทำอะไรกันดี</h3>
-        <div class="chips" id="what"></div>
-      </div>
-      <div class="group">
-        <h3>วันไหนว่าง</h3>
-        <div class="chips" id="when"></div>
-      </div>
-      <div style="margin-top:28px">
-        <button class="btn" id="confirm" disabled>ตกลงตามนี้</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5 -->
-  <section class="scene" id="s5">
-    <div class="ticket has-cat">
-      <div class="pair" aria-hidden="true">
-        <div class="cat" data-mood="love" data-fur="orange"></div>
-        <span class="heart">♥</span>
-        <div class="cat" data-mood="happy" data-fur="gray"></div>
-      </div>
-      <h2>นัดแล้วนะ ห้ามเบี้ยว</h2>
-      <dl>
-        <div class="row"><dt>คู่เดท</dt><dd id="t-who"></dd></div>
-        <div class="row"><dt>กิจกรรม</dt><dd id="t-what"></dd></div>
-        <div class="row"><dt>วัน</dt><dd id="t-when"></dd></div>
-      </dl>
-      <span class="stamp">ยืนยันแล้ว ♥</span>
-    </div>
-    <div class="after">
-      <button class="btn" id="send">ส่งคำตอบกลับ</button>
-      <span id="copied" aria-live="polite"></span>
-    </div>
+    <h1>สู้ ๆ นะ <span class="name" data-her></span></h1>
+    <p class="sub">แมวทุกตัวในนี้มาเป็นกำลังใจให้</p>
+    <div class="wall" id="wall"></div>
+    <button class="btn" id="more">ขอแมวเพิ่มอีก</button>
   </section>
 </main>
 
 <script>
   // ====== แก้ตรงนี้ได้เลย ======
   const HER_NAME = "เธอ";      // ชื่อเธอ เช่น "มิ้นท์" (เว้นว่าง = ใช้คำว่า "เธอ")
-  const MY_NAME  = "เรา";      // ชื่อเรา (เว้นว่าง = ใช้คำว่า "เรา")
 
   const LINES = [
     "เธอเหนื่อยไหม...    วันนี้เธอเก่งมากๆเลยคับ",
@@ -333,14 +261,12 @@
     "อะไรที่เจอแย่ๆในวันนี้ก็พยายามปล่อยมันไปนะคับ เธอทำเต็มที่แล้วเธอเก่งมากๆแล้ว"
   ];
 
-  const ACTIVITIES = ["☕ คาเฟ่", "🍜 กินข้าว", "🎬 ดูหนัง", "🌇 เดินเล่น", "🍦 กินของหวาน"];
-  const DAYS = ["เสาร์นี้", "อาทิตย์นี้", "เย็นวันศุกร์", "วันไหนก็ได้"];
-
-  const NO_TEXTS = ["แน่ใจนะ?", "คิดอีกทีสิ", "กดผิดหรือเปล่า", "ใจร้ายจัง 🥺", "ปุ่มนี้เสียแล้ว", "กดอีกปุ่มเถอะนะ"];
+  // ข้อความเล็ก ๆ ใต้รูปแมว (สุ่มหยิบไปใช้)
+  const CHEERS = ["สู้ ๆ นะ", "สู้ ๆ น้า", "สู้ ๆ นะคนเก่ง", "สู้ ๆ นะ", "เก่งมากแล้ว", "สู้ ๆ เมี๊ยว", "เป็นกำลังใจให้นะ", "สู้ ๆ นะ"];
+  const CATS_PER_LOAD = 12;   // จำนวนรูปแมวต่อการกด 1 ครั้ง
   // ==============================
 
   const her = HER_NAME.trim() || "เธอ";
-  const me = MY_NAME.trim() || "เรา";
   const $ = id => document.getElementById(id);
   const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -402,9 +328,11 @@
     setInterval(() => {
       const h = document.createElement("span");
       h.className = "float";
-      h.textContent = Math.random() < .25 ? "🐾" : "♥";
+      const roll = Math.random();
+      h.textContent = roll < .2 ? "🐾" : roll < .45 ? "สู้ ๆ นะ" : "♥";
+      if (roll >= .2 && roll < .45) h.classList.add("word");
       h.style.left = Math.random() * 100 + "%";
-      h.style.fontSize = 12 + Math.random() * 22 + "px";
+      h.style.fontSize = (h.classList.contains("word") ? 12 + Math.random() * 6 : 12 + Math.random() * 22) + "px";
       h.style.setProperty("--drift", (Math.random() * 120 - 60) + "px");
       h.style.setProperty("--spin", (Math.random() * 80 - 40) + "deg");
       h.style.animationDuration = 7 + Math.random() * 6 + "s";
@@ -434,6 +362,30 @@
     }
   }
 
+  // รูปแมวจริง: ดึงจาก TheCatAPI ถ้าดึงไม่ได้ใช้ cataas.com แทน
+  const pool = [];
+  let loading = null;
+  const backupCat = () => `https://cataas.com/cat?width=500&height=500&r=${Math.random()}`;
+  function refill() {
+    loading ??= fetch("https://api.thecatapi.com/v1/images/search?limit=10&mime_types=jpg,png&size=med")
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(list => pool.push(...list.map(c => c.url)))
+      .catch(() => { for (let i = 0; i < 10; i++) pool.push(backupCat()); })
+      .finally(() => { loading = null; });
+    return loading;
+  }
+  async function nextCat() {
+    if (!pool.length) await refill();
+    if (pool.length < 4) refill();
+    return pool.shift();
+  }
+  function showCat(img, url) {
+    img.onerror = () => { img.onerror = () => img.closest(".polaroid").remove(); img.src = backupCat(); };
+    img.src = url;
+  }
+  const cheer = () => CHEERS[Math.floor(Math.random() * CHEERS.length)];
+  refill();
+
   // ฉาก 1
   $("envelope").addEventListener("click", e => {
     e.currentTarget.classList.add("open");
@@ -442,102 +394,45 @@
 
   // ฉาก 2
   let idx = 0;
-  const LINE_CATS = [["normal", "orange"], ["love", "gray"], ["happy", "cream"], ["love", "orange"], ["happy", "gray"]];
-  $("dots").innerHTML = LINES.map(() => "<i></i>").join("");
   function showLine() {
     const span = document.createElement("span");
     span.textContent = LINES[idx].replaceAll("เธอ", her);
     $("line").replaceChildren(span);
-    setCat($("lineCat"), ...LINE_CATS[idx % LINE_CATS.length]);
+    $("linePhoto").style.setProperty("--tilt", (idx % 2 ? 2.5 : -2.5) + "deg");
+    $("lineCheer").textContent = cheer();
+    const shown = idx;
+    nextCat().then(url => { if (shown === idx) showCat($("lineImg"), url); });
     [...$("dots").children].forEach((d, i) => d.classList.toggle("on", i === idx));
-    $("next").textContent = idx === LINES.length - 1 ? "แล้วก็…" : "ต่อไป";
+    $("next").textContent = idx === LINES.length - 1 ? "ไปดูแมวกัน" : "ต่อไป";
   }
   $("next").addEventListener("click", () => {
-    if (++idx < LINES.length) showLine();
-    else go(3);
+    if (++idx < LINES.length) { showLine(); return; }
+    go(3);
+    scrollTo(0, 0);
+    burst(innerWidth / 2, innerHeight / 3, 34);
+    addCats();
   });
 
-  // ฉาก 3: ปุ่ม "ไม่" วิ่งหนี ปุ่ม "ไป" โตขึ้นเรื่อย ๆ
-  const yes = $("yes"), no = $("no");
-  let dodges = 0;
-  function dodge(e) {
-    e.preventDefault();
-    dodges++;
-    if (dodges === 1) setCat($("askCat"), "sad");
-    no.textContent = NO_TEXTS[Math.min(dodges - 1, NO_TEXTS.length - 1)];
-    yes.style.transform = `scale(${Math.min(1 + dodges * 0.12, 1.7)})`;
-    $("plea").textContent = dodges < 3 ? "อ้าว ปุ่มมันหนีเองนะ เราไม่ได้ทำ" : "ลองกดปุ่มสีแดงดูสิ ปุ่มนั้นไม่หนี";
-
-    const pad = 14, w = no.offsetWidth, h = no.offsetHeight;
-    const maxX = innerWidth - w - pad, maxY = innerHeight - h - pad;
-    const yr = yes.getBoundingClientRect();
-    let x, y, tries = 0;
-    do {
-      x = pad + Math.random() * Math.max(maxX - pad, 0);
-      y = pad + Math.random() * Math.max(maxY - pad, 0);
-    } while (++tries < 20 &&
-      x < yr.right + 20 && x + w > yr.left - 20 && y < yr.bottom + 20 && y + h > yr.top - 20);
-
-    if (!no.classList.contains("running")) {
-      const r = no.getBoundingClientRect();
-      no.style.left = r.left + "px";
-      no.style.top = r.top + "px";
-      no.classList.add("running");
-      no.getBoundingClientRect(); // ให้ transition เริ่มจากตำแหน่งเดิม
+  // ฉาก 3: กำแพงแมว
+  async function addCats() {
+    $("more").disabled = true;
+    for (let i = 0; i < CATS_PER_LOAD; i++) {
+      const fig = document.createElement("figure");
+      fig.className = "polaroid pop";
+      fig.style.setProperty("--tilt", (Math.random() * 7 - 3.5).toFixed(1) + "deg");
+      fig.style.animationDelay = i * 60 + "ms";
+      const img = document.createElement("img");
+      img.alt = "รูปแมว";
+      img.loading = "lazy";
+      const cap = document.createElement("figcaption");
+      cap.textContent = cheer();
+      fig.append(img, cap);
+      $("wall").appendChild(fig);
+      showCat(img, await nextCat());
     }
-    no.style.left = x + "px";
-    no.style.top = y + "px";
+    $("more").disabled = false;
   }
-  no.addEventListener("pointerdown", dodge);
-  no.addEventListener("click", dodge);
-  no.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") dodge(e); });
-
-  yes.addEventListener("click", () => {
-    const r = yes.getBoundingClientRect();
-    burst(r.left + r.width / 2, r.top + r.height / 2, 34);
-    no.classList.remove("running");
-    go(4);
-  });
-
-  // ฉาก 4
-  const pick = { what: "", when: "" };
-  function chips(key, items) {
-    const box = $(key);
-    items.forEach(text => {
-      const c = document.createElement("button");
-      c.className = "chip";
-      c.textContent = text;
-      c.setAttribute("aria-pressed", "false");
-      c.addEventListener("click", () => {
-        [...box.children].forEach(o => o.setAttribute("aria-pressed", o === c));
-        pick[key] = text;
-        $("confirm").disabled = !(pick.what && pick.when);
-      });
-      box.appendChild(c);
-    });
-  }
-  chips("what", ACTIVITIES);
-  chips("when", DAYS);
-
-  $("confirm").addEventListener("click", () => {
-    $("t-who").textContent = `${her} × ${me}`;
-    $("t-what").textContent = pick.what;
-    $("t-when").textContent = pick.when;
-    go(5);
-    burst(innerWidth / 2, innerHeight / 2, 44);
-  });
-
-  // ฉาก 5
-  $("send").addEventListener("click", async () => {
-    const text = `ตกลง ไปเดทกัน ♥\nกิจกรรม: ${pick.what}\nวัน: ${pick.when}`;
-    try {
-      if (navigator.share) { await navigator.share({ text }); return; }
-      await navigator.clipboard.writeText(text);
-      $("copied").textContent = "คัดลอกคำตอบแล้ว เอาไปวางในแชทได้เลย";
-    } catch (err) {
-      if (err.name !== "AbortError") $("copied").textContent = "แคปหน้าจอส่งมาแทนก็ได้นะ";
-    }
-  });
+  $("more").addEventListener("click", addCats);
 </script>
 </body>
 </html>
